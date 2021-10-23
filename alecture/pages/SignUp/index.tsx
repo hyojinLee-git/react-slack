@@ -1,15 +1,31 @@
-import React, { useState } from 'react'
-import {Form,Label,Input,Button, Header} from './styles'
+import useInput from '@hooks/useInput'
+import React, { useCallback, useState } from 'react'
+import {Form,Label,Input,Button, Header, LinkContainer,Error} from './styles'
 const SignUp=()=>{
-    const [email,setEmail]=useState('')
+    const [email,onChangeEmail]=useInput('')
+    const [nickname,onChangeNickname]=useInput('')  //커스텀훅
     const [password, setPassword]=useState('')
     const [passwordCheck,setPasswordCheck]=useState('')
-    const [nickname,setNickname]=useState('')
-    const onSubmit=()=>{}
-    const onChangeEmail=()=>{}
-    const onChangeNickname=()=>{}
-    const onChangePassword=()=>{}
-    const onChangePasswordCheck=()=>{}
+    const [missmatchError,setMissmatchError]=useState(false)
+
+
+    const onChangePassword=useCallback((e)=>{
+        setPassword(e.target.value)
+        setMissmatchError(e.target.value!==passwordCheck)
+    },[passwordCheck])  //외부 변수일때 써줌
+
+    const onChangePasswordCheck=useCallback((e)=>{
+        setPasswordCheck(e.target.value)
+        setMissmatchError(e.target.value!==password)
+    },[password])
+
+    const onSubmit=useCallback((e)=>{
+        e.preventDefault()
+        if(!missmatchError){
+            console.log('서버로 회원가입하기')
+        }
+        console.log(email,nickname,password,passwordCheck)
+    },[email,nickname,password,passwordCheck,missmatchError])
 
     return(<div id="container">
         <Header>Sleact</Header>
@@ -37,8 +53,18 @@ const SignUp=()=>{
                 <div>
                     <Input type="password" id="passwordCheck" name="passwordCheck" value={passwordCheck} onChange={onChangePasswordCheck} />
                 </div>
+                
             </Label>
+            {missmatchError && <Error>비밀번호가 일치하지 않습니다.</Error> }
+            {!nickname && <Error>닉네임을 입력해주세요.</Error>}
+            <Button type="submit">
+                회원가입
+            </Button>
         </Form>
+        <LinkContainer>
+            이미 회원이신가요?
+            <a href="/login">로그인 하러가기</a>
+        </LinkContainer>
     </div>)
 }
 export default SignUp

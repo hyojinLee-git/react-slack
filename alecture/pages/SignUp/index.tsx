@@ -2,6 +2,7 @@ import useInput from '@hooks/useInput'
 import React, { useCallback, useState } from 'react'
 import axios from 'axios';
 import {Form,Label,Input,Button, Header, LinkContainer,Error,Success} from './styles'
+import { Link } from 'react-router-dom';
 const SignUp=()=>{
     const [email,onChangeEmail]=useInput('')
     const [nickname,onChangeNickname]=useInput('')  //커스텀훅
@@ -28,7 +29,7 @@ const SignUp=()=>{
             console.log('서버로 회원가입하기')
             setSignUpError(false)
             setSignUpSuccess(false) //요청 여러번 날아갈 때
-            axios.post('/api/users',{
+            axios.post('http://localhost:3095/api/users',{
                 email,
                 nickname,
                 password
@@ -43,7 +44,7 @@ const SignUp=()=>{
             })
             .finally(()=>{})
         }
-        console.log(email,nickname,password,passwordCheck)
+        //console.log(email,nickname,password,passwordCheck)
     },[email,nickname,password,passwordCheck,missmatchError])
 
     return(<div id="container">
@@ -84,7 +85,7 @@ const SignUp=()=>{
         </Form>
         <LinkContainer>
             이미 회원이신가요?
-            <a href="/login">로그인 하러가기</a>
+            <Link to="/login">로그인 하러가기</Link>
         </LinkContainer>
     </div>)
 }

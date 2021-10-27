@@ -1,5 +1,5 @@
 import { Header,Form,Label,Input,Button,LinkContainer,Error } from '@pages/SignUp/styles'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import React, { useCallback, useState } from 'react'
 import useInput from '@hooks/useInput'
 import axios from 'axios'
@@ -10,12 +10,10 @@ const LogIn=()=>{
     const {data,error,mutate} =useSWR('http://localhost:3095/api/users',fetcher);
     const [email,onChangeEmail,setEmail]=useInput('')
     const [password,onChangePassword,setPassword]=useInput('')
-    const [loginSuccess,setLoginSuccess]=useState(false)
     const [loginError,setLoginError]=useState(false)
     const onSubmit=useCallback((e)=>{
         e.preventDefault()
         setLoginError(false)
-        setLoginSuccess(false)
         axios.post('http://localhost:3095/api/users/login',{
             email,
             password
@@ -24,14 +22,24 @@ const LogIn=()=>{
         })
         .then((response)=>{
             console.log(response)
-            setLoginSuccess(true)
             mutate()
         })
         .catch((error)=>{
             console.log(error.response)
             setLoginError(true)
+            setEmail('')
+            setPassword('')
         })
     },[email,password,mutate])
+
+    if(data===undefined){
+        return <div>로딩중...</div>
+    }
+
+    if(data){
+        return <Redirect to="/workspace/channel" />
+    }
+
     return(<div>
         <Header>Sleact</Header>
         <Form onSubmit={onSubmit}>
@@ -47,11 +55,12 @@ const LogIn=()=>{
                     <Input type="password" id="password" name="password" value={password} onChange={onChangePassword} />
                 </div>
             </Label>
+            {loginError&& <Error>이메일과 비밀번호 조합이 일치하지 않습니다.</Error>}
             <Button type="submit">
                 로그인
             </Button>
         </Form>
-        {loginError&& <Error>이메일과 비밀번호 조합이 일치하지 않습니다.</Error>}
+        
         <LinkContainer>
             아직 회원이 아니신가요?
             <Link to="/signup">회원가입 하러가기</Link>

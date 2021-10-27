@@ -72,3 +72,10 @@ proxy 설정: api로 하면 3095가 보낸것처럼 바꿀 수 있음
 
 swr은 get요청만 된다.
 swr은 next에서 만든거라 next와 잘맞음
+
+menu는 아이콘 옆에 뜨는 것
+modal은 전체 화면에 뜨는것
+
+왜 stopPropagation??
+->나(메뉴 or 모달)을 클릭해서 데이터를 입력해야되는데 버블링되서 메뉴or모달이 닫혀버림
+->나(메뉴 or 모달)을 클릭했을 때 stopPropagation을 실행해서 이벤트 전달을 막음

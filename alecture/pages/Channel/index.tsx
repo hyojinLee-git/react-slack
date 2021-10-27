@@ -1,10 +1,12 @@
-import Workspace from "@pages/Workspace";
 import React from "react";
+import { Container,Header } from "./style";
 
 const Channel=()=>{
-    return<Workspace><div>
-        채널
-    </div>
-    </Workspace>
+    return <Container>
+        <Header>
+            채널
+        </Header>
+    </Container>
+
 }
 export default Channel

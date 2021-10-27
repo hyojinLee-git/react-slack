@@ -22,7 +22,7 @@ const LogIn=()=>{
         })
         .then((response)=>{
             console.log(response)
-            mutate()
+            mutate(response.data,true)
         })
         .catch((error)=>{
             console.log(error.response)
@@ -37,6 +37,7 @@ const LogIn=()=>{
     }
 
     if(data){
+        console.log(data)
         return <Redirect to="/workspace/channel" />
     }
 

@@ -152,7 +152,9 @@ const Workspace:VFC=()=>{
             </Modal>
             <CreateChannelModal 
                 show={showCreateChannelModal} 
-                onCloseModal={onCloseModal}/>
+                onCloseModal={onCloseModal}
+                setShowCreateChannelModal={setShowCreateWorkspaceModal}
+            />
     </div>)
 }
 

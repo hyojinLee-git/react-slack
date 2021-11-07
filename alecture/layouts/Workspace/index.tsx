@@ -2,12 +2,12 @@ import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileIm
 import fetcher from "@utils/fetcher";
 import axios from "axios";
 import React, { FC,useCallback, useState, VFC } from "react";
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch,useParams } from "react-router";
 import useSWR from "swr";
 import gravatar from 'gravatar'
 import loadable from '@loadable/component';
 import Menu from "@components/Menu";
-import { IUser } from "@typings/db";
+import { IChannel, IUser } from "@typings/db";
 import { Link } from "react-router-dom";
 import { Button, Input, Label } from "@pages/SignUp/styles";
 import useInput from "@hooks/useInput";
@@ -27,6 +27,12 @@ const Workspace:VFC=()=>{
     const [newWorkspace,onChangeNewWorkspace,setNewWorkspace]=useInput('')
     const [newUrl,onChangeNewUrl,setNewUrl]=useInput('')
     const [showWorkspaceModal,setShowWorkspaceModal]=useState(false)
+
+
+    const {workspace}=useParams<{workspace:string}>()
+    const {data:channelData}=useSWR<IChannel[]>(
+        userData?`http://localhost:3095/api/workspaces/${workspace}/channels`:null,fetcher
+        )
 
     const onLogout=useCallback(()=>{
         axios.post('http://localhost:3095/api/users/logout',null,{
@@ -78,6 +84,7 @@ const Workspace:VFC=()=>{
     const onClickAddChannel=useCallback(()=>{
         setShowCreateChannelModal(true)
     },[])   
+    
 
     if(!userData){
         return <Redirect to="/login"/>
@@ -127,6 +134,7 @@ const Workspace:VFC=()=>{
                                 <button onClick={onClickAddChannel}>채널 만들기</button>
                             </WorkspaceModal>
                         </Menu>
+                        {channelData?.map((v)=>(<div>{v.name}</div>))}
                     </MenuScroll>
                 </Channels>
                 <Chats>
@@ -153,7 +161,7 @@ const Workspace:VFC=()=>{
             <CreateChannelModal 
                 show={showCreateChannelModal} 
                 onCloseModal={onCloseModal}
-                setShowCreateChannelModal={setShowCreateWorkspaceModal}
+                setShowCreateChannelModal={setShowCreateChannelModal}
             />
     </div>)
 }

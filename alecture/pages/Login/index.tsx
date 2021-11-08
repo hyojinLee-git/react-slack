@@ -7,14 +7,14 @@ import useSWR from 'swr'
 import fetcher from '@utils/fetcher'
 
 const LogIn=()=>{
-    const {data,error,mutate} =useSWR('http://localhost:3095/api/users',fetcher);
+    const {data,error,mutate} =useSWR('/api/users',fetcher);
     const [email,onChangeEmail,setEmail]=useInput('')
     const [password,onChangePassword,setPassword]=useInput('')
     const [loginError,setLoginError]=useState(false)
     const onSubmit=useCallback((e)=>{
         e.preventDefault()
         setLoginError(false)
-        axios.post('http://localhost:3095/api/users/login',{
+        axios.post('/api/users/login',{
             email,
             password
         },{
@@ -38,7 +38,7 @@ const LogIn=()=>{
 
     if(data){
         console.log(data)
-        return <Redirect to="/workspace/sleact/channel/일반" />
+        return <Redirect to="/workspaces/sleact/channels/일반" />
     }
 
     return(<div>

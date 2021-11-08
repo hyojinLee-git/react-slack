@@ -19,10 +19,13 @@ interface Props{
 const CreateChannelModal:FC<Props>=({show, onCloseModal,setShowCreateChannelModal})=>{
     const [newChannel,onChangeNewChannel,setNewChannel]=useInput('')
     const {workspace,channel}=useParams<{workspace:string,channel:string}>()
-    const {data:userData,error,mutate}=useSWR<IChannel[]|false>('http://localhost:3095/api/users',fetcher)
+    const {data:userData}=useSWR<IUser|false>('/api/users',fetcher)
+    const {mutate:revalidateChannel}=useSWR<IChannel[]>(
+        userData?`/api/workspaces/${workspace}/channels`:null,fetcher
+    )
     const onCreateChannel=useCallback((e)=>{
         e.preventDefault()
-        axios.post(`http://localhost:3095/api/workspaces/${workspace}/channels`,{
+        axios.post(`/api/workspaces/${workspace}/channels`,{
             name:newChannel
         },{
             withCredentials:true
@@ -30,7 +33,7 @@ const CreateChannelModal:FC<Props>=({show, onCloseModal,setShowCreateChannelModa
         .then(()=>{
             setShowCreateChannelModal(false);
             setNewChannel('')
-            mutate()
+            revalidateChannel()
         })
         .catch((error)=>{
             console.dir(error)

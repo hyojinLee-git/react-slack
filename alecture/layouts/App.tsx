@@ -13,7 +13,7 @@ const App:FC=()=>{
             <Redirect exact path="/" to="/login"/>  {/* /로 접속하면 /login으로 접속 */}
             <Route path="/login" component={LogIn}/>
             <Route path="/signup" component={SignUp}/>
-            <Route path="/workspace/:workspace" component={Workspace}/>
+            <Route path="/workspaces/:workspace" component={Workspace}/>
 
         </Switch>
     )

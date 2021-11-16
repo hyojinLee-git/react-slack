@@ -15,6 +15,9 @@ import Modal from "@components/Modal";
 import {toast} from 'react-toastify'
 import CreateChannelModal from "@components/CreateChannelModal";
 import InviteWorkspaceModal from "@components/InviteWorkspaceModal";
+import ChannelList from "@components/ChannelList";
+import DMList from "@components/DMList";
+
 
 const Channel=loadable(()=>import ("@pages/Channel"))
 const DirectMessage=loadable(()=>import ("@pages/DirectMessage"))
@@ -82,13 +85,17 @@ const Workspace:VFC=()=>{
     const onCloseModal=useCallback(()=>{
         setShowCreateWorkspaceModal(false)
         setShowCreateChannelModal(false)
+        setShowInviteWorkspaceModal(false)
     },[])
     const toggleWorkspaceModal=useCallback(()=>{
         setShowWorkspaceModal((prev)=>!prev)
     },[])
     const onClickAddChannel=useCallback(()=>{
         setShowCreateChannelModal(true)
-    },[])   
+    },[])  
+    const onClickInviteWorkspace=useCallback(()=>{
+        setShowInviteWorkspaceModal(true)
+    },[]) 
     
 
     if(!userData){
@@ -136,10 +143,13 @@ const Workspace:VFC=()=>{
                     <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{top:95,left:80}}>
                         <WorkspaceModal>
                             <h2>Sleact</h2>
+                            <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                             <button onClick={onClickAddChannel}>채널 만들기</button>
                         </WorkspaceModal>
                     </Menu>
-                    {channelData?.map((v)=>(<div>{v.name}</div>))}
+                    <ChannelList />
+                    <DMList/>
+                    
                 </MenuScroll>
             </Channels>
             <Chats>
@@ -173,6 +183,7 @@ const Workspace:VFC=()=>{
             onCloseModal={onCloseModal}
             setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
         />
+
     </div>)
 }
 

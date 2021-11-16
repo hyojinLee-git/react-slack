@@ -83,3 +83,7 @@ modal은 전체 화면에 뜨는것
 2021.11.08
 proxy server를 살리는 이유?
 배포할때 편하게 하려고
+
+2021.11.16
+navlink는 activeclass를 지정해줄 수 있음
+아래 주소와 위의 url창의 링크가 일치하면 highlight됨.

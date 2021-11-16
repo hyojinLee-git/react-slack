@@ -1,6 +1,6 @@
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
-import { Input, Label } from '@pages/SignUp/styles';
+import { Button, Input, Label } from '@pages/SignUp/styles';
 import { IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
@@ -45,6 +45,7 @@ const InviteWorkspaceModal:FC<Props>=({show,setShowInviteWorkspaceModal,onCloseM
                     <span>이메일</span>
                     <Input id="member" type="email" value={newMember} onChange={onChangeNewMember}/>
                 </Label>
+                <Button type="submit">초대하기</Button>
             </form>
         </Modal>
     )

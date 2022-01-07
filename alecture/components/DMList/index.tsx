@@ -6,6 +6,7 @@ import useSWR from "swr";
 import {CollapseButton} from '@components/DMList/style'
 import { NavLink } from "react-router-dom";
 import {MdArrowRight,MdArrowDropDown} from 'react-icons/md'
+import useSocket from "@hooks/useSocket";
 
 
 
@@ -18,7 +19,8 @@ const DMList:FC=()=>{
     const [channelCollapse,setChannelCollapse]=useState(false)
     const[countList,setCountList]=useState<{[key:string]:number}>({})
     const [onlineList,setOnlineList]=useState<number[]>([])
-
+    //socket
+    const[socket]=useSocket(workspace)
     const toggleChannelCollapse=useCallback(()=>{
         setChannelCollapse((prev)=>!prev)
     },[])
@@ -46,7 +48,20 @@ const DMList:FC=()=>{
         console.log('change workspace',workspace)
         setOnlineList([])
         setCountList({})
-    },[])
+    },[workspace])
+
+    useEffect(()=>{
+        socket?.on('onlineList', (data: number[]) => {
+            setOnlineList(data);
+          });
+          // socket?.on('dm', onMessage);
+          // console.log('socket on dm', socket?.hasListeners('dm'), socket);
+          return () => {
+            // socket?.off('dm', onMessage);
+            // console.log('socket off dm', socket?.hasListeners('dm'));
+            socket?.off('onlineList');
+          };
+    },[socket])
 
     return(<>
         <h2>
@@ -72,10 +87,11 @@ const DMList:FC=()=>{
                             to={`/workspaces/${workspace}/dm/${member.id}`}
                             onClick={resetCount(member.id)}
                         >
-                            <i className={`c-icon p-channel_sidebar__presence_icon              p-channel_sidebar__presence_icon--dim_enabled c-presence ${
+                            {/* <i className={`c-icon p-channel_sidebar__presence_icon              p-channel_sidebar__presence_icon--dim_enabled c-presence ${
                                 isOnline ? 'c-presence--active c-icon--presence-online' : 'c-icon--presence-offline'
                                 }`}
-                            />
+                            /> */}
+                            {isOnline?'●':'○'}
                             <span className={count>0? 'bold':undefined}>{member.nickname}</span>
                             {member.id===userData?.id && <span>(나)</span>}
                             {count>0 && <span className="count">{count}</span>}

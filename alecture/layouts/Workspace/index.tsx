@@ -1,7 +1,7 @@
 import { AddButton, Channels, Chats, Header, LogOutButton, MenuScroll, ProfileImg, ProfileModal, RightMenu, WorkspaceButton, WorkspaceModal, WorkspaceName, Workspaces, WorkspaceWrapper } from "./style";
 import fetcher from "@utils/fetcher";
 import axios from "axios";
-import React, { FC,useCallback, useState, VFC } from "react";
+import React, { FC,useCallback, useEffect, useState, VFC } from "react";
 import { Redirect, Route, Switch,useParams } from "react-router";
 import useSWR from "swr";
 import gravatar from 'gravatar'
@@ -17,6 +17,7 @@ import CreateChannelModal from "@components/CreateChannelModal";
 import InviteWorkspaceModal from "@components/InviteWorkspaceModal";
 import ChannelList from "@components/ChannelList";
 import DMList from "@components/DMList";
+import useSocket from "@hooks/useSocket";
 
 
 const Channel=loadable(()=>import ("@pages/Channel"))
@@ -42,6 +43,21 @@ const Workspace:VFC=()=>{
     const{data:memberData}=useSWR<IUser[]>(
             userData?`/api/workspaces/${workspace}/channels`:null,fetcher
         )
+
+    const [socket,disconnect]=useSocket(workspace)
+
+    useEffect(()=>{
+        if(channelData&&userData&&socket){
+            socket.emit('login',{id:userData.id,channels:channelData.map((v)=>v.id)})
+        }
+        
+    },[channelData,userData,socket])
+    useEffect(()=>{
+        return()=>{
+            disconnect()
+        }
+    },[workspace])
+    
     const onLogout=useCallback(()=>{
         axios.post('/api/users/logout',null,{
             withCredentials:true
